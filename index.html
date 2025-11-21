@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSC331 Project 2 - AI Question Answering System</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;margin:0;padding:0;height:100vh;display:flex;justify-content:center;align-items:center;}
+    .container{background:rgba(255,255,255,0.1);padding:40px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);backdrop-filter:blur(10px);width:90%;max-width:700px;text-align:center;}
+    h1{font-size:2.2em;margin-bottom:10px;} h2{font-size:1.1em;opacity:0.9;margin-bottom:20px;}
+    select, textarea{width:100%;padding:15px;font-size:16px;border:none;border-radius:12px;margin:15px 0;background:rgba(255,255,255,0.2);color:white;}
+    button{padding:14px 40px;font-size:18px;background:#fff;color:#667eea;border:none;border-radius:50px;cursor:pointer;font-weight:bold;}
+    #response{margin-top:30px;background:rgba(255,255,255,0.15);padding:20px;border-radius:12px;text-align:left;min-height:100px;line-height:1.6;display:none;}
+    .loading{color:#a0d8ff;font-style:italic;}
+    footer{margin-top:40px;font-size:0.9em;opacity:0.8;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CSC331 Project 2</h1>
+    <h2>AI Question Answering System</h2>
+    
+    <p><strong>Name:</strong> [Oluebube Paula]<br>
+       <strong>Matric No:</strong> [23CH034188]</p>
+
+    <select id="aiChoice">
+      <option value="grok">Grok (xAI) - Recommended</option>
+      <option value="gemini">Google Gemini (free)</option>
+      <option value="mistral">Mistral AI (free)</option>
+    </select>
+
+    <textarea id="question" placeholder="Type any question here... Example: What is the capital of France?"></textarea>
+    <button onclick="askAI()">Ask AI</button>
+
+    <div id="response">
+      <strong>Answer:</strong><br><br>
+      <span id="answerText">Your answer will appear here...</span>
+    </div>
+
+    <footer>Powered by free AI APIs </footer>
+  </div>
+
+<<script>
+async function askAI() {
+  const q = document.getElementById("question").value;
+  const ans = document.getElementById("answerText");
+  const box = document.getElementById("response");
+
+  if (!q.trim()) {
+    alert("Please type a question");
+    return;
+  }
+
+  box.style.display = "block";
+  ans.innerHTML = "Thinking...";
+
+  try {
+    const res = await fetch("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: q })
+    });
+
+    const data = await res.json();
+    ans.innerHTML = data.answer.replace(/\n/g, "<br>");
+  } catch (error) {
+    ans.innerHTML = "Error: Could not get an answer.";
+  }
+}
+</script>
+
+
+</body>
+</html>
